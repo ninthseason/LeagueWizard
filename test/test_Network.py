@@ -1,7 +1,7 @@
 import unittest
 
-from Authentication import ClientData
-from Network import create_request
+from core.Authentication import ClientData
+from core.Network import create_request
 
 
 class MyTestCase(unittest.TestCase):

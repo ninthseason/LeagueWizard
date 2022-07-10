@@ -1,6 +1,6 @@
 import unittest
 
-from Authentication import ClientData
+from core.Authentication import ClientData
 
 
 class MyTestCase(unittest.TestCase):

@@ -1,7 +1,7 @@
 import asyncio
 import unittest
 
-from AutoPick import auto_choose_champ
+from plugins.AutoPick import auto_choose_champ
 
 
 class MyTestCase(unittest.TestCase):

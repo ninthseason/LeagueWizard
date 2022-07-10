@@ -1,7 +1,7 @@
 import asyncio
 import unittest
 
-from EventListener import LeagueEventListener
+from core.EventListener import LeagueEventListener
 
 
 class MyTestCase(unittest.TestCase):

@@ -6,8 +6,9 @@ import aioconsole
 import colorama
 from colorama import Fore, Style
 
-from Config import global_configs
-from EventListener import LeagueEventListener
+from core.Config import global_configs
+from core.EventListener import LeagueEventListener
+from core.PluginLoader import load_plugins
 
 colorama.init()
 
@@ -65,7 +66,7 @@ async def cli():
             new_id = await aioconsole.ainput("请输入新的英雄id:\n")
             try:
                 new_id = int(new_id)
-                if not (0 <= new_id <= 300):
+                if not (0 <= new_id <= 888):
                     raise ValueError
                 global_configs.update({"AutoPickChampId": new_id})
                 flash_msg = None
@@ -78,8 +79,9 @@ async def cli():
 
 
 async def main():
+    load_plugins("plugins")
     cli_task = asyncio.create_task(cli())
-    event_listener_task = asyncio.create_task(LeagueEventListener.start())
+    asyncio.create_task(LeagueEventListener.start())
 
     await cli_task
 
