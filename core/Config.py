@@ -1,44 +1,50 @@
 import json
 import logging
-import os
+import pathlib
 from typing import Any
 
-base_dir = os.path.dirname(__file__)
 
+class GlobalConfig:
+    __configs: dict[str, Any] = {}
+    config_file_path: str = None
 
-class Config:
-    name: str = ""
-    configs: dict[str, Any] = {}
+    @staticmethod
+    def get(item: str):
+        return GlobalConfig.__configs.get(item, None)
 
-    def __init__(self, name):
-        self.name = name
-        self.read_from_file()
+    @staticmethod
+    def update(new_entry: dict):
+        GlobalConfig.__configs.update(new_entry)
+        GlobalConfig.save_to_file()
 
-    def __getitem__(self, item):
-        return self.configs[item]
+    @staticmethod
+    def save_to_file():
+        assert GlobalConfig.config_file_path is not None, "配置文件路径未设置"
+        with open(GlobalConfig.config_file_path, "w") as f:
+            json.dump(GlobalConfig.__configs, f)
 
-    def get(self, item):
-        return self[item]
-
-    def update(self, new_entry: dict):
-        self.configs.update(new_entry)
-        self.save_to_file()
-
-    def save_to_file(self):
-        with open(base_dir + "/" + self.name + "_config.json", "w") as f:
-            json.dump(self.configs, f)
-
-    def read_from_file(self):
+    @staticmethod
+    def read_from_file():
+        assert GlobalConfig.config_file_path is not None, "配置文件路径未设置"
         try:
-            with open(base_dir + "/" + self.name + "_config.json", "r") as f:
-                self.configs = json.load(f)
+            with open(GlobalConfig.config_file_path, "r") as f:
+                GlobalConfig.__configs = json.load(f)
         except FileNotFoundError:
             logging.warning("未找到配置文件，将自动生成。")
-            global_configs.update({'AutoPick': True})
-            global_configs.update({'AutoPickChampId': 157})
 
-    def __str__(self):
-        return str(self.configs)
+    @staticmethod
+    def check(item: str) -> bool:
+        """
+        :param item: The config name to check
+        :return: bool
 
+        Check a config entry whether have been recorded
+        """
+        return True if (GlobalConfig.__configs.get(item, None) is not None) else False
 
-global_configs = Config('global')
+    @staticmethod
+    def set_config_file_path(path: str):
+        if pathlib.Path(path).is_dir():
+            raise RuntimeError("配置文件路径无效")
+        GlobalConfig.config_file_path = path
+        GlobalConfig.read_from_file()

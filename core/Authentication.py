@@ -19,9 +19,10 @@ class ClientData:
         certificate: str = ""
 
     def __init__(self):
-        self.fetch()
+        raise RuntimeError("Class `Client` is static")
 
-    def fetch(self) -> None:
+    @staticmethod
+    def fetch() -> None:
         """
         Get data from LeagueClient (Game start required)
         """
@@ -32,18 +33,18 @@ class ClientData:
                 continue
             if process.name() == "LeagueClientUx.exe":
                 cmdline = str(process.cmdline())
-                self.pid = int(re.findall(r"--app-pid=(.*?)'", cmdline)[0])
-                self.port = int(re.findall(r"--app-port=(.*?)'", cmdline)[0])
-                self.password = re.findall(r"--remoting-auth-token=(.*?)'", cmdline)[0]
+                ClientData.pid = int(re.findall(r"--app-pid=(.*?)'", cmdline)[0])
+                ClientData.port = int(re.findall(r"--app-port=(.*?)'", cmdline)[0])
+                ClientData.password = re.findall(r"--remoting-auth-token=(.*?)'", cmdline)[0]
                 return
 
         print("未检测到游戏，将在5秒后重试")
         time.sleep(5)
-        self.fetch()
+        ClientData.fetch()
 
-    def __str__(self):
-        return f"Port: {self.port}\nPid: {self.pid}\nPassword: {self.password}"
+    @staticmethod
+    def to_string():
+        return f"Port: {ClientData.port}\nPid: {ClientData.pid}\nPassword: {ClientData.password}"
 
 
-# 单例
-ClientData = ClientData()
+ClientData.fetch()

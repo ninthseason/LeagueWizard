@@ -2,8 +2,7 @@ import logging
 
 from httpx import Response
 
-from core.Authentication import ClientData
-from core.Config import global_configs
+from core.Config import GlobalConfig
 from core.Network import create_request
 
 
@@ -25,7 +24,7 @@ async def choose_champ(action_id: str, action_type: str, champ_id: str) -> Respo
             "championId": champ_id
         }
     }
-    _res = await create_request(_options, ClientData)
+    _res = await create_request(_options)
     logging.debug(_res.content)
     return _res
 
@@ -40,7 +39,7 @@ async def auto_choose_champ() -> None:
         "method": "get",
     }
 
-    res = (await create_request(options, ClientData)).json()
+    res = (await create_request(options)).json()
     logging.debug(res)
     try:
         local_player_cell_id = res['localPlayerCellId']
@@ -48,9 +47,9 @@ async def auto_choose_champ() -> None:
             for i in action:
                 if i['actorCellId'] == local_player_cell_id \
                         and not i['completed'] \
-                        and global_configs.get('AutoPick') \
+                        and GlobalConfig.get('AutoPick') \
                         and i['type'] == 'pick' \
                         and i['isInProgress']:
-                    await choose_champ(str(i['id']), 'pick', str(global_configs.get('AutoPickChampId')))
+                    await choose_champ(str(i['id']), 'pick', str(GlobalConfig.get('AutoPickChampId')))
     except KeyError:
         logging.error('[AutoPick]Can not get game data. Are you in select phase?')
