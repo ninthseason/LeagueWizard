@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Union, Literal, Callable, Coroutine
+from typing import Optional, Union, Literal, Callable, Coroutine, NoReturn
 
 import aioconsole
 import colorama
@@ -62,7 +62,12 @@ class IndexPage:
             print(flash_message)
 
     @staticmethod
-    async def loop():
+    async def loop() -> NoReturn:
+        """
+        :return: NoReturn
+
+        Start message loop of IndexPage
+        """
         flash_msg: Optional[str] = None
         while True:
             IndexPage.render(flash_msg)

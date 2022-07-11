@@ -3,7 +3,7 @@ import json
 import logging
 import pathlib
 import ssl
-from typing import Coroutine, Callable
+from typing import Coroutine, Callable, Literal, Union
 
 import httpx
 import websockets
@@ -12,7 +12,7 @@ from httpx import Response
 from .Authentication import ClientData
 
 
-async def create_request(options: dict, credentials: ClientData = ClientData) -> Response:
+async def create_request(options: dict[Literal['url', 'method', 'body'], Union[str, dict]], credentials: ClientData = ClientData) -> Response:
     """
     :param options: dict[str, Any]
     :param credentials: ClientData from Authentication.py

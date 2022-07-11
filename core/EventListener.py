@@ -6,7 +6,7 @@ from .Network import create_websocket
 class EventListener:
     listeners: dict[str, Callable[[Any], Coroutine]] = {}
 
-    async def start(self):
+    async def start(self) -> None:
         """
         Start the event listener
         """
