@@ -27,9 +27,11 @@ def auto_pick_text():
 
 
 async def change_auto_pick_champ():
-    new_id = await aioconsole.ainput("请输入目标英雄id:\n")
+    new_id: str = await aioconsole.ainput("请输入目标英雄id:\n/>")
+    if new_id.strip() == "":
+        return "操作取消"
     try:
-        new_id = int(new_id)
+        new_id: int = int(new_id)
     except ValueError:
         return "id格式错误"
     GlobalConfig.update({'AutoPickChampId': new_id})

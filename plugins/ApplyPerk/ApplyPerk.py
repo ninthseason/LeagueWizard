@@ -21,6 +21,11 @@ class RuneSystem:
 
     @staticmethod
     async def get_current_rune() -> Optional[dict]:
+        """
+        :return:The rune page data dict
+
+        Get the current default rune page
+        """
         res = await create_request({
             'url': '/lol-perks/v1/pages',
             'method': 'get',
@@ -32,6 +37,12 @@ class RuneSystem:
 
     @staticmethod
     async def del_rune_page(page_id: int = None) -> None:
+        """
+        :param page_id: The page id
+        :return: None
+
+        Drop a rune page from game by id
+        """
         if page_id is None:
             logging.warning("符文页删除失败，请切换至可修改的符文页")
         await create_request({
@@ -41,6 +52,15 @@ class RuneSystem:
 
     @staticmethod
     async def add_rune_page(name: str, primary_style_id: int, selected_perk_ids: list[int], sub_style_id: int) -> None:
+        """
+        :param name: An alias of rune page
+        :param primary_style_id: Primary style id e.m 8000
+        :param selected_perk_ids: a list of selected perk, long 9
+        :param sub_style_id: Sub Style id e.m 8100
+        :return: None
+
+        Add a rune page to local database
+        """
         await create_request({
             'url': f'/lol-perks/v1/pages',
             'method': 'post',
@@ -62,6 +82,12 @@ class RuneSystem:
 
     @staticmethod
     async def apply_rune(name: str) -> None:
+        """
+        :param name: the target rune page's alias
+        :return: None
+
+        apply a rune page from local database to game(current page)
+        """
         assert RuneSystem.__database.get(name, None) is not None, "符文系统出现内部错误"
         page_name: str = RuneSystem.__database[name]['name']
         primary_style_id: int = RuneSystem.__database[name]['primaryStyleId']
@@ -74,24 +100,44 @@ class RuneSystem:
     """local method"""
 
     @staticmethod
-    async def save_current_rune() -> None:
+    async def save_current_rune() -> bool:
+        """
+        :return: None
+
+        save game's current rune page to local database
+        """
         page = await RuneSystem.get_current_rune()
-        name = await aioconsole.ainput("请输入保存名称(重名覆盖):\n")
+        name: str = await aioconsole.ainput("请输入保存名称(重名覆盖):\n/>")
+        if name.strip() == "":
+            return False
         RuneSystem.__database.update({name: {'name': page['name'],
                                              'primaryStyleId': page['primaryStyleId'],
                                              'selectedPerkIds': page['selectedPerkIds'],
                                              'subStyleId': page['subStyleId']}})
         RuneSystem.save_data_to_file()
+        return True
 
     @staticmethod
-    async def del_local_page(name: str):
+    async def del_local_page(name: str) -> None:
+        """
+        :param name: The target rune page's alias
+        :return: None
+
+        Drop a rune page from local database
+        """
         try:
             RuneSystem.__database.pop(name)
+            RuneSystem.save_data_to_file()
         except KeyError:
             pass
 
     @staticmethod
     async def render() -> Optional[dict[str, str]]:
+        """
+        :return: A dict['Serial Number', 'Alias']
+
+        print all rune page in local database
+        """
         if len(RuneSystem.__database) == 0:
             return None
         os.system('cls')

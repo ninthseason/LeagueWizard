@@ -1,4 +1,5 @@
 import logging
+from typing import Literal
 
 from httpx import Response
 
@@ -15,7 +16,7 @@ async def choose_champ(action_id: str, action_type: str, champ_id: str) -> Respo
     choose a champion by id when select phase
     e.m: choose_champ("1", "pick", "157")
     """
-    _options = {
+    _options: dict[Literal['url', 'method', 'body'], str | dict] = {
         'url': f"/lol-champ-select/v1/session/actions/{action_id}",
         'method': 'patch',
         'body': {
@@ -34,7 +35,7 @@ async def auto_choose_champ() -> None:
     Auto select champion
     """
     # get session
-    options = {
+    options: dict[Literal['url', 'method', 'body'], str | dict] = {
         "url": "/lol-champ-select/v1/session",
         "method": "get",
     }
