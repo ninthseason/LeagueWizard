@@ -1,18 +1,18 @@
 {
-  "test": {
-    "name": "\u65b0\u7684\u7b26\u6587\u98752",
-    "primaryStyleId": 8100,
+  "\u51b0\u5ddd\u9524\u77f3": {
+    "name": "\u51b0\u5ddd\u9524\u77f3",
+    "primaryStyleId": 8300,
     "selectedPerkIds": [
-      8112,
-      8126,
-      8136,
-      8135,
-      9104,
-      8014,
+      8351,
+      8313,
+      8345,
+      8352,
+      8473,
+      8242,
       5008,
       5008,
-      5001
+      5002
     ],
-    "subStyleId": 8000
+    "subStyleId": 8400
   }
 }

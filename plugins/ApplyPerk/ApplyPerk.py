@@ -17,6 +17,8 @@ database_file = pathlib.Path(__file__).with_name("data.json")
 class RuneSystem:
     __database: dict[str, dict[Literal['name', 'primaryStyleId', 'selectedPerkIds', 'subStyleId'], Union[int, list, str]]] = {}
 
+    """online method"""
+
     @staticmethod
     async def get_current_rune() -> Optional[dict]:
         res = await create_request({
@@ -36,16 +38,6 @@ class RuneSystem:
             'url': f"/lol-perks/v1/pages/{page_id}",
             'method': 'delete'
         })
-
-    @staticmethod
-    async def save_current_rune() -> None:
-        page = await RuneSystem.get_current_rune()
-        name = await aioconsole.ainput("请输入保存名称(重名覆盖):\n")
-        RuneSystem.__database.update({name: {'name': page['name'],
-                                             'primaryStyleId': page['primaryStyleId'],
-                                             'selectedPerkIds': page['selectedPerkIds'],
-                                             'subStyleId': page['subStyleId']}})
-        RuneSystem.save_data_to_file()
 
     @staticmethod
     async def add_rune_page(name: str, primary_style_id: int, selected_perk_ids: list[int], sub_style_id: int) -> None:
@@ -78,6 +70,25 @@ class RuneSystem:
         current_rune = await RuneSystem.get_current_rune()
         await RuneSystem.del_rune_page(current_rune['id'])
         await RuneSystem.add_rune_page(page_name, primary_style_id, selected_perk_ids, sub_style_id)
+
+    """local method"""
+
+    @staticmethod
+    async def save_current_rune() -> None:
+        page = await RuneSystem.get_current_rune()
+        name = await aioconsole.ainput("请输入保存名称(重名覆盖):\n")
+        RuneSystem.__database.update({name: {'name': page['name'],
+                                             'primaryStyleId': page['primaryStyleId'],
+                                             'selectedPerkIds': page['selectedPerkIds'],
+                                             'subStyleId': page['subStyleId']}})
+        RuneSystem.save_data_to_file()
+
+    @staticmethod
+    async def del_local_page(name: str):
+        try:
+            RuneSystem.__database.pop(name)
+        except KeyError:
+            pass
 
     @staticmethod
     async def render() -> Optional[dict[str, str]]:
