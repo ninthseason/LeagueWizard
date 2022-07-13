@@ -67,16 +67,20 @@ async def create_websocket(func: Callable[[list], Coroutine], credentials: Clien
         ssl_context.load_verify_locations(localhost_pem)
     except FileNotFoundError:
         raise FileNotFoundError("缺少ssl证书文件")
-    async with websockets.connect(path, ssl=ssl_context) as websocket:
-        logging.info("[Network]WebSocket连接成功")
-        try:
-            while True:
-                await websocket.send(json.dumps([5, 'OnJsonApiEvent']))
-                msg = await websocket.recv()
-                try:
-                    json_data: list = json.loads(msg)
-                    await func(json_data)
-                except json.decoder.JSONDecodeError:
-                    pass
-        except websockets.ConnectionClosed:
-            logging.warning("[Network]与游戏客户端断开连接，请重新启动助手")
+    while True:
+        async with websockets.connect(path, ssl=ssl_context) as websocket:
+            logging.info("[Network]WebSocket连接成功")
+            try:
+                while True:
+                    await websocket.send(json.dumps([5, 'OnJsonApiEvent']))
+                    msg = await websocket.recv()
+                    try:
+                        json_data: list = json.loads(msg)
+                        await func(json_data)
+                    except json.decoder.JSONDecodeError:
+                        pass
+            except websockets.ConnectionClosed:
+                pass
+            except ConnectionRefusedError:
+                logging.warning("检测到游戏关闭，助手自动关闭")
+                exit()

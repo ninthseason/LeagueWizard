@@ -1,1 +1,1 @@
-{"AutoPick": true, "AutoPickChampId": 412}
+{"AutoPick": true, "AutoPickChampId": 41}

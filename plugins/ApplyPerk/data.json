@@ -14,5 +14,37 @@
       5002
     ],
     "subStyleId": 8400
+  },
+  "\u5f71\u54e8": {
+    "name": "\u5f71\u54e8",
+    "primaryStyleId": 8000,
+    "selectedPerkIds": [
+      8005,
+      8009,
+      9104,
+      8014,
+      8401,
+      8473,
+      5005,
+      5008,
+      5002
+    ],
+    "subStyleId": 8400
+  },
+  "AP\u6cfd\u4e3d": {
+    "name": "AP\u6cfd\u4e3d",
+    "primaryStyleId": 8200,
+    "selectedPerkIds": [
+      8229,
+      8226,
+      8210,
+      8237,
+      8014,
+      8009,
+      5008,
+      5008,
+      5002
+    ],
+    "subStyleId": 8000
   }
 }
