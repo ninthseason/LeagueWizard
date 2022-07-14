@@ -1,5 +1,9 @@
-<div style="text-align: center;font-size: 40px;font-weight: bold">League Wizard</div>
-<div style="text-align: center">An async python framework to implement plugins in League of Legends</div>
+<div align="center">
+
+  # League Wizard
+  An async python framework to implement plugins in League of Legends
+
+</div>
 
 ### 环境要求
 
@@ -49,12 +53,10 @@ LeagueWizard仅是一个插件框架，任何实际性的功能需要通过插�
 > 一个插件应由以下部分组成
 >
 > - 逻辑代码
-    >
-- 事件监听器
+>   - 事件监听器
 >   - 事件回调函数
 > - 主菜单选项
-    >
-- 显示文本
+>   - 显示文本
 >   - 回调函数
 > - 配置条目
 >
