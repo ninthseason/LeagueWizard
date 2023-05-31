@@ -5,7 +5,7 @@ from core.EventListener import LeagueEventListener
 from core.IndexPage import IndexPage
 from core.PluginLoader import load_plugins
 
-GlobalConfig.set_config_file_path(r"D:\MySource\PYproject\lol_wizard\config.txt")
+GlobalConfig.set_config_file_path(r"C:\Users\23518\Desktop\LeagueWizard-master\config.txt")
 
 
 async def main():

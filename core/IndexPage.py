@@ -27,7 +27,7 @@ class IndexPage:
     options: dict[str, dict[Literal['text', 'callback'], Union[Callable[[], str], Callable[[], Coroutine]]]] = {}
 
     banner = (f"*********************************************\n"
-              f"** {Style.BRIGHT}League Wizard {Fore.RED}v0.2.0{Fore.RESET}{Style.RESET_ALL}\n"
+              f"** {Style.BRIGHT}League Wizard {Fore.RED}v0.3.0{Fore.RESET}{Style.RESET_ALL}\n"
               f"** Powered by Kl1nge5\n"
               f"*********************************************")
 
@@ -60,6 +60,7 @@ class IndexPage:
         print(Style.RESET_ALL)
         if flash_message is not None:
             print(flash_message)
+        print("/>", end="")
 
     @staticmethod
     async def loop() -> NoReturn:
@@ -71,7 +72,7 @@ class IndexPage:
         flash_msg: Optional[str] = None
         while True:
             IndexPage.render(flash_msg)
-            command: str = await aioconsole.ainput("/>")
+            command: str = await aioconsole.ainput()
             command = command.strip()
             if command == 'x':
                 exit()

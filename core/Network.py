@@ -12,7 +12,8 @@ from httpx import Response
 from .Authentication import ClientData
 
 
-async def create_request(options: dict[Literal['url', 'method', 'body'], Union[str, dict]], credentials: ClientData = ClientData) -> Response:
+async def create_request(options: dict[Literal['url', 'method', 'body'], Union[str, dict]],
+                         credentials: ClientData = ClientData) -> Response:
     """
     :param options: dict[str, Any]
     :param credentials: ClientData from Authentication.py
@@ -30,7 +31,7 @@ async def create_request(options: dict[Literal['url', 'method', 'body'], Union[s
     port: int = credentials.port
     url: str = options['url']
     path: str = "https://" + host + ":" + str(port) + url
-    logging.debug(path)
+    # logging.debug(path)
     method: str = options['method']
     body: dict = options.get("body", None)
 
@@ -46,7 +47,7 @@ async def create_request(options: dict[Literal['url', 'method', 'body'], Union[s
     # verify=False temporarily
     async with httpx.AsyncClient(verify=False) as client:
         response = await client.request(method, path, headers=headers, json=body)
-    logging.debug(response.request.content)
+    # logging.debug(response.request.content)
     return response
 
 
@@ -71,8 +72,8 @@ async def create_websocket(func: Callable[[list], Coroutine], credentials: Clien
         async with websockets.connect(path, ssl=ssl_context) as websocket:
             logging.info("[Network]WebSocket连接成功")
             try:
+                await websocket.send(json.dumps([5, 'OnJsonApiEvent']))
                 while True:
-                    await websocket.send(json.dumps([5, 'OnJsonApiEvent']))
                     msg = await websocket.recv()
                     try:
                         json_data: list = json.loads(msg)
@@ -82,5 +83,28 @@ async def create_websocket(func: Callable[[list], Coroutine], credentials: Clien
             except websockets.ConnectionClosed:
                 pass
             except ConnectionRefusedError:
-                logging.warning("检测到游戏关闭，助手自动关闭")
-                exit()
+                logging.warning("检测到游戏关闭，助手进入离线状态")
+                # exit()
+
+
+async def simple_request(url: str) -> Response:
+    """
+    :param url: str
+    :return: The response dat
+
+    Make a Simple(without credentials) HTTPS request to Client.
+    Always used to call Live Client Data API.
+    https://developer.riotgames.com/docs/lol#league-client-api
+    """
+    path: str = "https://127.0.0.1:2999" + url
+    # logging.debug(path)
+    method: str = "get"
+
+    # Do not need the agent temporarily
+    agent: str = ""
+
+    # verify=False temporarily
+    async with httpx.AsyncClient(verify=False) as client:
+        response = await client.request(method, path)
+    # logging.debug(response.request.content)
+    return response

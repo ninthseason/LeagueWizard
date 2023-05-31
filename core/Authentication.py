@@ -4,6 +4,8 @@ import time
 
 import psutil
 
+# from tkinter import messagebox
+
 base_dir = os.path.dirname(__file__)
 
 
@@ -33,6 +35,7 @@ class ClientData:
                 continue
             if process.name() == "LeagueClientUx.exe":
                 cmdline = str(process.cmdline())
+                # messagebox.showinfo("*", cmdline)
                 ClientData.pid = int(re.findall(r"--app-pid=(.*?)'", cmdline)[0])
                 ClientData.port = int(re.findall(r"--app-port=(.*?)'", cmdline)[0])
                 ClientData.password = re.findall(r"--remoting-auth-token=(.*?)'", cmdline)[0]

@@ -1,1 +1,1 @@
-{"AutoPick": true, "AutoPickChampId": 41}
+{"AutoPick": true, "AutoPickChampId": 875, "StatisticEnabled": true}
