@@ -69,9 +69,9 @@ async def create_websocket(func: Callable[[list], Coroutine], credentials: Clien
     except FileNotFoundError:
         raise FileNotFoundError("缺少ssl证书文件")
     while True:
-        async with websockets.connect(path, ssl=ssl_context) as websocket:
-            logging.info("[Network]WebSocket连接成功")
-            try:
+        try:
+            async with websockets.connect(path, ssl=ssl_context) as websocket:
+                logging.info("[Network]WebSocket连接成功")
                 await websocket.send(json.dumps([5, 'OnJsonApiEvent']))
                 while True:
                     msg = await websocket.recv()
@@ -80,12 +80,11 @@ async def create_websocket(func: Callable[[list], Coroutine], credentials: Clien
                         await func(json_data)
                     except json.decoder.JSONDecodeError:
                         pass
-            except websockets.ConnectionClosed:
-                pass
-            except ConnectionRefusedError:
-                logging.warning("检测到游戏关闭，助手进入离线状态")
-                # exit()
-
+        except websockets.ConnectionClosed:
+            pass
+        except ConnectionRefusedError:
+            logging.warning("检测到游戏关闭，助手进入离线状态")
+            break
 
 async def simple_request(url: str) -> Response:
     """
